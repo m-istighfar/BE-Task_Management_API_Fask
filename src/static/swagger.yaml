@@ -3,7 +3,7 @@ info:
   title: Week21-Flask
   version: 1.0.0
 servers:
-  - url : 34.126.153.135
+  - url : http://34.126.153.135
     description: Production Server
   - url: http://127.0.0.1:5000
     description: Development Server
@@ -32,13 +32,36 @@ paths:
               example:
                 username: johndoe
                 password: password123
-                email: johndoe@examzple.com
+                email: johndoe@example.com
                 bio: Cita-citaku menjadi orang kaya
       responses:
         '200':
-          description: Successful response
+          description: Successful registration
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 5
+                  username:
+                    type: string
+                    example: johndoe
+                  bio:
+                    type: string
+                    example: Cita-citaku menjadi orang kaya
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: username sudah digunakan
+
   /auth/login:
     post:
       tags:
@@ -54,9 +77,25 @@ paths:
                 password: password123
       responses:
         '200':
-          description: Successful response
+          description: Successful login
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: abcdef
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: username atau password tidak tepat
   /tweet/create:
     post:
       tags:
@@ -73,9 +112,26 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: Tweet successfully created
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tweet created
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: Access forbidden
+
   /following:
     post:
       tags:
@@ -92,9 +148,16 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: Successfully followed/unfollowed user
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User followed/unfollowed
+
   /user/profile:
     get:
       tags:
@@ -104,9 +167,29 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: User profile information
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: johndoe
+                  bio:
+                    type: string
+                    example: Cita-citaku menjadi orang kaya
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: User not found
+
   /user/feed:
     get:
       tags:
@@ -116,9 +199,22 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: User feed
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tweets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tweet_id:
+                          type: integer
+                        content:
+                          type: string
+
   /moderation/tweet:
     post:
       tags:
@@ -136,9 +232,16 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: Tweet flagged as spam
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tweet flagged as spam
+
   /moderation/user:
     post:
       tags:
@@ -156,6 +259,12 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successful response
+          description: User suspended
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User suspended
