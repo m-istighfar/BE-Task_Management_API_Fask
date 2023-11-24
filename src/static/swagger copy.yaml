@@ -3,10 +3,7 @@ info:
   title: Week21-Flask
   version: 1.0.0
 servers:
-  - url : 34.126.153.135
-    description: Production Server
   - url: http://127.0.0.1:5000
-    description: Development Server
 components:
   securitySchemes:
     bearerAuth:
@@ -30,10 +27,11 @@ paths:
             schema:
               type: object
               example:
-                username: johndoe
-                password: password123
+                username: johndoe2z
+                password: password123z
                 email: johndoe@examzple.com
-                bio: Cita-citaku menjadi orang kaya
+                bio: Software developer and tech enthusiast.
+                role: USER
       responses:
         '200':
           description: Successful response
@@ -68,7 +66,9 @@ paths:
             schema:
               type: object
               example:
-                Tweet: Hmm, hari ini makan apa ya?
+                Tweet: >-
+                  Setelah sukses menjadi software engineer, kini saya menjadi
+                  peternak lele.
       security:
         - bearerAuth: []
       responses:
@@ -99,18 +99,6 @@ paths:
     get:
       tags:
         - User
-      summary: Get User Profile
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /user/feed:
-    get:
-      tags:
-        - User
       summary: Get Feed
       security:
         - bearerAuth: []
@@ -130,7 +118,7 @@ paths:
             schema:
               type: object
               example:
-                tweet_id: 1
+                tweet_id: 5
                 is_spam: true
       security:
         - bearerAuth: []
@@ -150,7 +138,7 @@ paths:
             schema:
               type: object
               example:
-                user_id: 1
+                user_id: 5
                 is_suspended: true
       security:
         - bearerAuth: []
