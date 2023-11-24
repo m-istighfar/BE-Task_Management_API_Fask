@@ -86,8 +86,8 @@ paths:
                   token:
                     type: string
                     example: abcdef
-        '401':
-          description: Unauthorized
+        '400':
+          description: Bad request
           content:
             application/json:
               schema:
@@ -96,6 +96,17 @@ paths:
                   error_message:
                     type: string
                     example: username atau password tidak tepat
+        '401':
+          description: Account Suspended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: akun telah di suspend
+
   /tweet/create:
     post:
       tags:
@@ -112,15 +123,43 @@ paths:
         - bearerAuth: []
       responses:
         '200':
+       
           description: Tweet successfully created
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  id:
+                    type: integer
+                    example: 10
+                  published_at:
                     type: string
-                    example: Tweet created
+                    format: datetime
+                    example: "2023-11-24T12:00:00Z"
+                  tweet:
+                    type: string
+                    example: "Setelah sukses menjadi software engineer, kini saya menjadi peternak lele."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tweet tidak boleh lebih dari 150 karakter"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "token tidak valid"
         '403':
           description: Forbidden
           content:
@@ -157,6 +196,17 @@ paths:
                   message:
                     type: string
                     example: User followed/unfollowed
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: tidak bisa follow diri sendiri
+
 
   /user/profile:
     get:
@@ -179,6 +229,17 @@ paths:
                   bio:
                     type: string
                     example: Cita-citaku menjadi orang kaya
+        '401':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: token tidak valid
+
         '404':
           description: User not found
           content:
@@ -199,20 +260,23 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: User feed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  tweets:
+              description: User feed
+              content:
+                application/json:
+                  schema:
                     type: array
                     items:
                       type: object
                       properties:
-                        tweet_id:
+                        id:
                           type: integer
-                        content:
+                        user_id:
+                          type: integer
+                        username:
+                          type: string
+                        published_at:
+                          type: string
+                        tweet:
                           type: string
 
   /moderation/tweet:
@@ -268,3 +332,24 @@ paths:
                   message:
                     type: string
                     example: User suspended
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: user tidak ditemukan
+        '403':
+          description: Forbidden Action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: User tidak dapat melakukan aksi ini
+
