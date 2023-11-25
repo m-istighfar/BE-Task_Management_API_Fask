@@ -21,8 +21,12 @@ def post_tweet():
     data = request.get_json()
     tweet_content = data.get("Tweet")
     
-    if not tweet_content or len(tweet_content) > 150:
+    if not tweet_content:
+        return jsonify({"error_message": "Tweet tidak boleh kosong"}), 400
+
+    if len(tweet_content) > 150:
         return jsonify({"error_message": "Tweet tidak boleh lebih dari 150 karakter"}), 400
+
 
     new_tweet = Tweet(user_id=user.id, content=tweet_content)
     db.session.add(new_tweet)
