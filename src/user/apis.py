@@ -50,9 +50,14 @@ def get_user_feed():
         return jsonify({"error_message": "Token tidak valid"}), 401
 
     user_id = payload["user_id"]
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error_message": "User not found!"}), 404
 
- 
-    following_ids = [f.following_user_id for f in Following.query.filter_by(user_id=user_id).all()]
+    following_ids = []
+    for following in Following.query.filter_by(user_id=user_id).all():
+      following_ids.append(following.following_user_id)
 
   
     tweets = Tweet.query.filter(Tweet.user_id.in_(following_ids), Tweet.is_spam == False).order_by(Tweet.published_at.desc()).limit(10).all()
