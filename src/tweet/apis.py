@@ -27,7 +27,6 @@ def post_tweet():
     if len(tweet_content) > 150:
         return jsonify({"error_message": "Tweet tidak boleh lebih dari 150 karakter"}), 400
 
-
     new_tweet = Tweet(user_id=user.id, content=tweet_content)
     db.session.add(new_tweet)
     db.session.commit()
