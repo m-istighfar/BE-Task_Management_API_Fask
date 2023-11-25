@@ -16,7 +16,6 @@ CORS(app)
 SWAGGER_URL = '/swagger'  
 API_URL = '/static/swagger.yaml'  
 
-# Blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,  
     API_URL,
@@ -24,11 +23,6 @@ swaggerui_blueprint = get_swaggerui_blueprint(
         'app_name': "Twitter-like API"
     }
 )
-
-
-
-
-app = Flask(__name__)
 
 database_url = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
