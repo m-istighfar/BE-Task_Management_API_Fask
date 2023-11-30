@@ -28,7 +28,6 @@ class PasswordResetRequestSchema(Schema):
     email = fields.Email(required=True)
 
 class PasswordResetSchema(Schema):
-    reset_token = fields.Str(required=True)
     new_password = fields.Str(required=True)
 
 # Routes
@@ -125,16 +124,17 @@ def request_password_reset():
 
     return jsonify({"message": "If the email is associated with an account, a password reset link will be sent."}), 200
 
-@auth_blp.route("/reset-password", methods=["POST"])
-def reset_password():
+@auth_blp.route("/reset-password/<reset_token>", methods=["POST"])
+def reset_password(reset_token):
     schema = PasswordResetSchema()
     try:
         data = schema.load(request.json)
+        data['reset_token'] = reset_token
     except ValidationError as err:
         return jsonify(err.messages), 400
 
     # Find the user with the reset token and check if the token is still valid
-    user = User.query.filter(User.reset_password_token == data['reset_token'],
+    user = User.query.filter(User.reset_password_token == reset_token,
                              User.reset_password_expires > datetime.utcnow()).first()
     if not user:
         return jsonify({"error": "Invalid or expired reset token"}), 400
@@ -149,9 +149,10 @@ def reset_password():
     return jsonify({"message": "Password reset successfully"}), 200
 
 
+
 # Helper functions
 def send_password_reset_email(email, reset_token):
     reset_link = f"http://yourfrontend.com/reset-password/{reset_token}"
     msg = Message("Password Reset", sender=os.getenv('MAIL_USERNAME'), recipients=[email])
-    msg.body = f"Please click on the link to reset your password: {reset_link}"
+    msg.body = f"To reset your password, click the following link: {reset_link}"
     mail.send(msg)

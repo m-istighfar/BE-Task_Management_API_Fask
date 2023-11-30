@@ -8,6 +8,7 @@ from user.apis import user_blueprint
 from tweet.apis import tweet_blueprint
 from following.apis import following_blueprint
 from moderation.apis import moderation_blueprint
+from task.apis import task_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 
@@ -45,10 +46,11 @@ limiter.init_app(app)
 
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 app.register_blueprint(auth_blp, url_prefix="/auth")
-app.register_blueprint(user_blueprint, url_prefix="/user")
+# app.register_blueprint(user_blueprint, url_prefix="/user")
 app.register_blueprint(tweet_blueprint, url_prefix="/tweet")
 app.register_blueprint(following_blueprint, url_prefix="/following")
 app.register_blueprint(moderation_blueprint, url_prefix="/moderation")
+app.register_blueprint(task_blueprint, url_prefix="/user")
 
-with app.app_context():
-    db_init()
+# with app.app_context():
+#     db_init()
