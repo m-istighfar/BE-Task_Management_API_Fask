@@ -1,4 +1,6 @@
+
 from flask import Blueprint, request, jsonify
+from marshmallow import Schema, fields, ValidationError
 from user.models import User, UserRole
 from task.models import Task
 from db import db
@@ -8,9 +10,27 @@ from flask_login import current_user
 
 admin_blueprint = Blueprint('admin', __name__)
 
+class CreateUserSchema(Schema):
+    username = fields.Str(required=True)
+    email = fields.Email(required=True)
+    password = fields.Str(required=True)
+    role = fields.Str(required=True, validate=lambda x: x.upper() in [role.value for role in UserRole])
+
+class UpdateUserSchema(Schema):
+    username = fields.Str()
+    email = fields.Email()
+    role = fields.Str(validate=lambda x: x.upper() in [role.value for role in UserRole] if x else True)
+
+
 @admin_blueprint.route('/create-user', methods=['POST'])
 @role_required(['ADMIN'])  # Assuming only admins can create users
 def create_user():
+    schema = CreateUserSchema()
+    try:
+        data = schema.load(request.json)
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+    
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
@@ -32,6 +52,12 @@ def create_user():
 @admin_blueprint.route('/update-user/<int:user_id>', methods=['PUT'])
 @role_required(['ADMIN'])
 def update_user(user_id):
+    schema = UpdateUserSchema()
+    try:
+        data = schema.load(request.json)
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+    
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -48,6 +74,7 @@ def update_user(user_id):
 @admin_blueprint.route('/delete-user/<int:user_id>', methods=['DELETE'])
 @role_required(['ADMIN'])
 def delete_user(user_id):
+    
     # Decode the JWT from the Authorization header
     token = request.headers.get('Authorization').split()[1]
     current_user_id = decode_jwt(token)['user_id']  # Assuming 'user_id' is in the JWT payload
