@@ -6,7 +6,6 @@ from task.models import Task
 from db import db
 from auth.utils import decode_jwt, role_required
 from app import bcrypt  
-from flask_login import current_user 
 
 admin_blueprint = Blueprint('admin', __name__)
 
