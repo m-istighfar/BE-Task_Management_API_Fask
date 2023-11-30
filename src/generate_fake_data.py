@@ -51,6 +51,5 @@ def generate_fake_data():
     create_fake_tweets(users)
     create_fake_followings(users)
 
-if __name__ == "__main__":
     with app.app_context(): 
         generate_fake_data()

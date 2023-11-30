@@ -8,7 +8,7 @@ from auth.utils import decode_jwt, role_required
 user_blueprint = Blueprint("user", __name__)
 
 @user_blueprint.route("profile", methods=["GET"])
-@role_required("ALL")
+@role_required(["USER", "MODERATOR"])
 def get_user_profile():
     payload = decode_jwt(request.headers.get('Authorization'))
     if not payload:
@@ -43,7 +43,7 @@ def get_user_profile():
     }), 200
 
 @user_blueprint.route("/feed", methods=["GET"])
-@role_required(UserRole.USER)
+@role_required(["USER"])
 def get_user_feed():
     payload = decode_jwt(request.headers.get('Authorization'))
     if not payload:

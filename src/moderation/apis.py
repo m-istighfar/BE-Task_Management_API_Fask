@@ -17,7 +17,7 @@ class SuspendUserSchema(Schema):
     is_suspended = fields.Boolean(missing=True)
 
 @moderation_blueprint.route("/tweet", methods=["POST"])
-@role_required(UserRole.MODERATOR)
+@role_required(["MODERATOR"])
 def flag_tweet_as_spam():
     data = request.get_json()
     schema = FlagTweetSchema()
@@ -43,7 +43,7 @@ def flag_tweet_as_spam():
     }), 200
     
 @moderation_blueprint.route("/user", methods=["POST"])
-@role_required(UserRole.MODERATOR)
+@role_required(["MODERATOR"])
 def suspend_user():
     data = request.get_json()
     schema = SuspendUserSchema()

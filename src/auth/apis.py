@@ -13,7 +13,7 @@ class UserRegistrationSchema(Schema):
     password = fields.String(required=True)
     email = fields.Email(required=True)
     bio = fields.String(validate=lambda x: len(x) <= 200)  
-    role = fields.String(validate=lambda x: x in [role.value for role in UserRole])
+    role = fields.String(validate=lambda x: x in [role.value for role in UserRole]) #bisa enum marshmellow
 
 class UserLoginSchema(Schema):
     username = fields.String(required=True)

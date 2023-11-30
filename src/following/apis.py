@@ -13,7 +13,7 @@ class FollowUnfollowSchema(Schema):
     user_id = fields.Int(required=True)
 
 @following_blueprint.route("", methods=["POST"])
-@role_required(UserRole.USER)
+@role_required(["USER"])
 def manage_following():
 
     payload = decode_jwt(request.headers.get('Authorization'))

@@ -1,7 +1,7 @@
 import jwt, os
 from functools import wraps
 from flask import request, jsonify
-from user.models import User
+from user.models import UserRole, User
 from db import db
 
 def decode_jwt(token):
@@ -21,7 +21,7 @@ def role_required(allowed_roles):
         def wrapped_function(*args, **kwargs):
             token = request.headers.get('Authorization')
             if not token:
-                return jsonify({"error_message": "Authorization token is missing"}), 401
+                return jsonify({"error_message": "Token is tidak ada"}), 401
 
             payload = decode_jwt(token)
             if not payload:
@@ -30,14 +30,13 @@ def role_required(allowed_roles):
             user_id = payload.get("user_id")
             user = User.query.get(user_id)
             if not user:
-                return jsonify({"error_message": "User not found"}), 404
+                return jsonify({"error_message": "User tidak ditemukan"}), 404
 
-            if isinstance(allowed_roles, list):
-                if user.role not in allowed_roles:
-                    return jsonify({"error_message": "Access denied"}), 403
-            elif allowed_roles != 'ALL' and user.role != allowed_roles:
+            allowed_roles_enum = [UserRole[role] for role in allowed_roles]
+
+     
+            if user.role not in allowed_roles_enum:
                 return jsonify({"error_message": "Access denied"}), 403
-
             return func(*args, **kwargs)
         return wrapped_function
     return decorator

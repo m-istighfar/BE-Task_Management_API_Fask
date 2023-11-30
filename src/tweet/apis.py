@@ -7,7 +7,7 @@ from auth.utils import decode_jwt, role_required
 tweet_blueprint = Blueprint("tweet", __name__)
 
 @tweet_blueprint.route("/create", methods=["POST"])
-@role_required(UserRole.USER)
+@role_required(["USER"])
 def post_tweet():
     
     payload = decode_jwt(request.headers.get('Authorization'))
