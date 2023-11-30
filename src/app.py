@@ -5,6 +5,7 @@ from db import db, db_init
 from common.bcrypt import bcrypt
 from auth.apis import auth_blp
 from user.apis import user_blueprint
+from admin.apis import admin_blueprint
 from tweet.apis import tweet_blueprint
 from following.apis import following_blueprint
 from moderation.apis import moderation_blueprint
@@ -51,6 +52,7 @@ app.register_blueprint(tweet_blueprint, url_prefix="/tweet")
 app.register_blueprint(following_blueprint, url_prefix="/following")
 app.register_blueprint(moderation_blueprint, url_prefix="/moderation")
 app.register_blueprint(task_blueprint, url_prefix="/user")
+app.register_blueprint(admin_blueprint, url_prefix="/admin")
 
 # with app.app_context():
 #     db_init()

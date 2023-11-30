@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask-mail = "*"
 flask-limiter = "*"
+flask-login = "*"
 
 [dev-packages]
 
