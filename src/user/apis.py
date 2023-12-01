@@ -13,12 +13,12 @@ class CreateUserSchema(Schema):
     username = fields.Str(required=True)
     email = fields.Email(required=True)
     password = fields.Str(required=True)
-    role = fields.Str(required=True, validate=lambda x: x.upper() in [role.value for role in UserRole])
+    role = fields.Str(required=True, validate=lambda x: x.lower() in [role.value for role in UserRole])
 
 class UpdateUserSchema(Schema):
     username = fields.Str()
     email = fields.Email()
-    role = fields.Str(validate=lambda x: x.upper() in [role.value for role in UserRole] if x else True)
+    role = fields.Str(validate=lambda x: x.lower() in [role.value for role in UserRole] if x else True)
 
 
 @user_blueprint.route('/create-user', methods=['POST'])
@@ -34,7 +34,7 @@ def create_user():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role', 'USER')  # Default to 'USER' role if not provided
+    role = UserRole[data.get('role').upper()]
     verified = True
 
     existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
@@ -61,10 +61,10 @@ def update_user(user_id):
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    data = request.get_json()
     user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
-    user.role = data.get('role', user.role)
+    if 'role' in data:
+        user.role = UserRole[data['role'].upper()]  # Handle role update
 
     db.session.commit()
     return jsonify({"message": "User updated successfully"}), 200
