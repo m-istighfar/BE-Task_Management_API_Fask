@@ -13,7 +13,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.config.from_object(Config)
 
-CORS(app)
+allowed_origins = ["http://localhost:5173", "https://clinquant-nougat-f52198.netlify.app"]
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
 
 db.init_app(app)
