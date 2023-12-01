@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from app import db, bcrypt, mail, limiter
-from flask_mail import Message
+from app import db, bcrypt, limiter
 from user.models import User, UserRole
 from marshmallow import Schema, fields, ValidationError
+from services.email_service import send_verification_email, send_password_reset_email
 import jwt
 import os
 from datetime import datetime, timedelta
@@ -98,11 +98,7 @@ def login():
     return jsonify({"token": token}), 200
 
 # Helper functions
-def send_verification_email(email, token):
-    verification_link = f"http://yourfrontend.com/verify-email/{token}"
-    msg = Message("Email Verification", sender=os.getenv('MAIL_USERNAME'), recipients=[email])
-    msg.body = f"Click on the link to verify your email: {verification_link}"
-    mail.send(msg)
+
 
 # Add other routes for password reset as needed
 @auth_blp.route("/request-password-reset", methods=["POST"])
@@ -151,8 +147,4 @@ def reset_password(reset_token):
 
 
 # Helper functions
-def send_password_reset_email(email, reset_token):
-    reset_link = f"http://yourfrontend.com/reset-password/{reset_token}"
-    msg = Message("Password Reset", sender=os.getenv('MAIL_USERNAME'), recipients=[email])
-    msg.body = f"To reset your password, click the following link: {reset_link}"
-    mail.send(msg)
+
