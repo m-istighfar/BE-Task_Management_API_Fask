@@ -9,12 +9,15 @@ from user.apis import user_blueprint
 from task.apis import task_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
+from flask_talisman import Talisman
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 allowed_origins = ["http://localhost:5173", "https://clinquant-nougat-f52198.netlify.app"]
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
+
+Talisman(app)
 
 
 db.init_app(app)
