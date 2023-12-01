@@ -10,7 +10,7 @@ from task.apis import task_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 from flask_talisman import Talisman
-from flask_seasurf import SeaSurf
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -19,7 +19,7 @@ allowed_origins = ["http://localhost:5173", "https://clinquant-nougat-f52198.net
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
 Talisman(app)
-csrf = SeaSurf(app)
+
 
 
 db.init_app(app)

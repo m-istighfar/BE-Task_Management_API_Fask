@@ -18,6 +18,8 @@ faker = "*"
 gunicorn = "*"
 flask-mail = "*"
 flask-limiter = "*"
+flask-talisman = "*"
+flask-seasurf = "*"
 
 [dev-packages]
 
