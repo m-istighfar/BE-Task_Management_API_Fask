@@ -1,0 +1,355 @@
+openapi: 3.0.0
+info:
+  title: Week21-Flask
+  version: 1.0.0
+servers:
+  - url : http://34.126.153.135
+    description: Production Server
+  - url: http://127.0.0.1:5000
+    description: Development Server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Auth
+  - name: Tweet
+  - name: Following
+  - name: User
+  - name: Moderations
+paths:
+  /auth/registration:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: johndoe
+                password: password123
+                email: johndoe@example.com
+                bio: Cita-citaku menjadi orang kaya
+      responses:
+        '200':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 5
+                  username:
+                    type: string
+                    example: johndoe
+                  bio:
+                    type: string
+                    example: Cita-citaku menjadi orang kaya
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: username sudah digunakan
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: johndoe
+                password: password123
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: abcdef
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: username atau password tidak tepat
+        '401':
+          description: Account Suspended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: akun telah di suspend
+
+  /tweet/create:
+    post:
+      tags:
+        - Tweet
+      summary: Create a Tweet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Tweet: Hmm, hari ini makan apa ya?
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+       
+          description: Tweet successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 10
+                  published_at:
+                    type: string
+                    format: datetime
+                    example: "2023-11-24T12:00:00Z"
+                  tweet:
+                    type: string
+                    example: "Setelah sukses menjadi software engineer, kini saya menjadi peternak lele."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "Tweet tidak boleh lebih dari 150 karakter"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: "token tidak valid"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: Access forbidden
+
+  /following:
+    post:
+      tags:
+        - Following
+      summary: Follow/Unfollow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully followed/unfollowed user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User followed/unfollowed
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: tidak bisa follow diri sendiri
+
+
+  /user/profile:
+    get:
+      tags:
+        - User
+      summary: Get User Profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: johndoe
+                  bio:
+                    type: string
+                    example: Cita-citaku menjadi orang kaya
+        '401':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: token tidak valid
+
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: User not found
+
+  /user/feed:
+    get:
+      tags:
+        - User
+      summary: Get Feed
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+              description: User feed
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        user_id:
+                          type: integer
+                        username:
+                          type: string
+                        published_at:
+                          type: string
+                        tweet:
+                          type: string
+
+  /moderation/tweet:
+    post:
+      tags:
+        - Moderations
+      summary: Flag tweet as spam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tweet_id: 1
+                is_spam: true
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tweet flagged as spam
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tweet flagged as spam
+
+  /moderation/user:
+    post:
+      tags:
+        - Moderations
+      summary: Suspend User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 1
+                is_suspended: true
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User suspended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User suspended
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: user tidak ditemukan
+        '403':
+          description: Forbidden Action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                    example: User tidak dapat melakukan aksi ini
+

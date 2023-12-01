@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Week21-Flask
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Auth
+  - name: Tweet
+  - name: Following
+  - name: User
+  - name: Moderations
+paths:
+  /auth/registration:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: johndoe2z
+                password: password123z
+                email: johndoe@examzple.com
+                bio: Software developer and tech enthusiast.
+                role: USER
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: johndoe
+                password: password123
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tweet/create:
+    post:
+      tags:
+        - Tweet
+      summary: Create a Tweet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Tweet: >-
+                  Setelah sukses menjadi software engineer, kini saya menjadi
+                  peternak lele.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /following:
+    post:
+      tags:
+        - Following
+      summary: Follow/Unfollow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/profile:
+    get:
+      tags:
+        - User
+      summary: Get Feed
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /moderation/tweet:
+    post:
+      tags:
+        - Moderations
+      summary: Flag tweet as spam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tweet_id: 5
+                is_spam: true
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /moderation/user:
+    post:
+      tags:
+        - Moderations
+      summary: Suspend User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 5
+                is_suspended: true
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
