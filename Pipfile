@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flask-talisman = "*"
+flask-seasurf = "*"
 
 [dev-packages]
 
