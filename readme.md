@@ -1,64 +1,113 @@
-# Twitter-Like API Project
+# Task Geass
+A modern task management application designed to help you stay organized and productive.
 
-# Deployment
+## Live Deployment
 
-The Twitter-Like API is deployed on Google Cloud Platform (GCP) and can be accessed at:
+The application is deployed live at: [Live URL](https://clinquant-nougat-f52198.netlify.app)
+The API is available at: [API Endpoint](https://expensive-boa-pajamas.cyclic.app/api-docs)
 
-🔗 [Swagger UI for Twitter-Like API](http://34.126.153.135/swagger)
+## Table of Contents
 
-This deployment is containerized using Docker and hosted on a GCP.
+- [Task Geass](#task-geass)
+- [Key Features](#key-features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Tech Stack](#tech-stack)
+- [Live Deployment](#live-deployment)
+- [API Endpoint](#api-endpoint)
+- [Usage](#usage)
+- [Contribution](#contribution)
+- [License](#license)
+- [Contact](#contact)
 
-This brief section directs users to the deployed application and succinctly informs them about the deployment method.
+## Key Features
 
-## Overview
-This project is a Flask-based API that mimics basic functionalities of Twitter. It allows users to register, login, post tweets, follow/unfollow users, and view user profiles. Additionally, it introduces Role-Based Access Control (RBAC) with a special role for Twitter Moderators, who can flag tweets as spam and suspend user accounts.
+- **User Authentication**: Safeguard your tasks and information with our user authentication system.
+- **Login & Register**: Sign up to start organizing, or log in to access your tasks.
+- **Secure Password Recovery**: Forget your password? Recover it securely.
+- **Task Management**: Add, view, and edit tasks with ease.
+- **Task Prioritization**: Determine which tasks need your attention first.
+- **Mark Tasks as Complete**: Get the satisfaction of checking off completed tasks.
+- **Sorting & Filtering**: Easily find and order your tasks.
+- **Search**: Quickly locate specific tasks.
 
+## Getting Started
 
-## Features
-- **User Authentication**: Registration and login functionalities.
-- **Tweet Management**: Users can post and view tweets.
-- **User Relationships**: Users can follow and unfollow each other.
-- **User Profiles**: Retrieve user profiles with tweets and follow statistics.
-- **Feed Generation**: Users can view a feed of tweets from users they follow.
-- **Moderation**: Twitter Moderators can flag tweets as spam and suspend user accounts.
+### Prerequisites
 
-## Technologies Used
-- Flask, SQLAlchemy, Marshmallow, JWT, PostgreSQL
+Ensure you have the following software installed:
+- **Python 3.11**: The programming language used.
+- **Pipenv** (optional but recommended): A packaging tool for Python that simplifies dependency management.
 
-## Setup and Installation
-1. **Clone the repository:**
+### Installation
+
+1. Clone the repository from GitHub:
    ```
-   git clone https://github.com/RevoU-FSSE-2/Week-21-m-istighfar
+   git clone https://github.com/RevoU-FSSE-2/week-22-m-istighfar.git
    ```
-2. **Navigate to the project directory:**
+2. Navigate to the cloned directory:
    ```
-   cd revou-flask-api-main
+   cd week-22-m-istighfar
    ```
-3. **Install dependencies using pipenv:**
+3. Install the required dependencies using Pipenv:
    ```
    pipenv install
+   ```
+4. Activate the virtual environment:
+   ```
    pipenv shell
    ```
-4. **Set up environment variables:**
-   - Copy `.env.example` to a new file named `.env` in the `src` directory.
-   - Modify the `.env` file with your specific configurations.
-
-5. **Run the application:**
+5. Start the Flask development server:
    ```
    flask run
    ```
+6. Open your browser and navigate to `http://localhost:5000` or the port you set.
 
-## API Endpoints
 
-The following table outlines the available API endpoints along with their respective request methods and descriptions:
+## Tech Stack
 
-| Endpoint                  | Method | Description                                                  |
-|---------------------------|--------|--------------------------------------------------------------|
-| `/auth/registration`      | POST   | User registration, including optional role assignment.       |
-| `/auth/login`             | POST   | User login, with handling for suspended accounts.            |
-| `/user/profile`                   | GET    | Fetches the profile of the logged-in user.                   |
-| `/tweet`                  | POST   | Allows users to post a tweet.                                |
-| `/following`              | POST   | Enables users to follow/unfollow other users.                |
-| `/user/feed`              | GET    | Generates a feed based on the users followed by the requester. |
-| `/moderation/tweet`       | POST   | Allows Twitter Moderators to flag tweets as spam.            |
-| `/moderation/user`        | POST   | Enables Twitter Moderators to suspend user accounts.         |
+### Frontend:
+
+- **React**: A JavaScript library for building user interfaces.
+- **React Router DOM**: A collection of navigational components that compose declaratively with your app.
+- **Ant Design**: A design system with values of Nature and Determinacy for better user experience of enterprise applications.
+- **Vite**: An opinionated web dev build tool that serves your code via native ES modules.
+- **TypeScript**: Superset of JavaScript that compiles to clean JavaScript output, adding optional static 
+- **Moment.js**: Rich, comprehensive time & date utility library.
+- **vite-plugin-pwa**: Vite plugin to add PWA capabilities to your project.
+
+### Backend:
+
+- **Flask**: A micro web framework written in Python.
+- **Flask Extensions**: Various Flask extensions like Flask-SQLAlchemy, Flask-Bcrypt, Flask-Cors, Flask-Mail, Flask-Limiter, Flask-Talisman, Flask-SeaSurf, and Flask-Swagger-UI.
+- **SQLAlchemy**: An ORM (Object-Relational Mapper) library for Python.
+- **Psycopg2-binary**: A PostgreSQL adapter for Python.
+- **PyJWT**: A Python library to work with JSON Web Tokens.
+- **Marshmallow**: A library for complex data serialization and deserialization.
+- **Faker**: A library for generating fake data.
+- **Gunicorn**: A Python WSGI HTTP server for UNIX.
+
+## API Endpoint
+
+The API is available at: [API Endpoint](https://expensive-boa-pajamas.cyclic.app/api-docs)
+
+| Method | Endpoint                          | Description                             |
+|--------|-----------------------------------|-----------------------------------------|
+| POST   | /auth/register                    | Register a new user                      |
+| GET    | /auth/verify-email/{token}        | Verify user's email address             |
+| POST   | /auth/login                       | Login user                               |
+| POST   | /auth/refreshToken                | Refresh the access token                 |
+| POST   | /auth/request-password-reset      | Request a password reset email           |
+| POST   | /auth/reset-password/{resetToken} | Reset user's password with a given token |
+| GET    | /user/tasks                       | Get all tasks for the logged-in user     |
+| POST   | /user/tasks                       | Create a new task for the logged-in user |
+| DELETE | /user/tasks                       | Delete all tasks for the logged-in user  |
+| GET    | /user/tasks/{id}                  | Get a specific task by ID                |
+| PUT    | /user/tasks/{id}                  | Update a specific task by ID             |
+| DELETE | /user/tasks/{id}                  | Delete a specific task by ID             |
+| PATCH  | /user/tasks/{id}/complete         | Mark a specific task as complete         |
+| GET    | /admin/list-user                  | Get a list of all users (Admin only)     |
+| POST   | /admin/create-user                | Create a new user (Admin only)           |
+| PUT    | /admin/update-user/{id}           | Update a specific user by ID (Admin only)|
+| DELETE | /admin/delete-user/{id}           | Delete a specific user by ID (Admin only)|
