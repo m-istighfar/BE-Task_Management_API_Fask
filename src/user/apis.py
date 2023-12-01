@@ -7,7 +7,7 @@ from db import db
 from auth.utils import decode_jwt, role_required
 from app import bcrypt  
 
-admin_blueprint = Blueprint('admin', __name__)
+user_blueprint = Blueprint('user', __name__)
 
 class CreateUserSchema(Schema):
     username = fields.Str(required=True)
@@ -21,7 +21,7 @@ class UpdateUserSchema(Schema):
     role = fields.Str(validate=lambda x: x.upper() in [role.value for role in UserRole] if x else True)
 
 
-@admin_blueprint.route('/create-user', methods=['POST'])
+@user_blueprint.route('/create-user', methods=['POST'])
 @role_required(['ADMIN'])  # Assuming only admins can create users
 def create_user():
     schema = CreateUserSchema()
@@ -48,7 +48,7 @@ def create_user():
 
     return jsonify({"message": "User created successfully", "user_id": new_user.id}), 201
 
-@admin_blueprint.route('/update-user/<int:user_id>', methods=['PUT'])
+@user_blueprint.route('/update-user/<int:user_id>', methods=['PUT'])
 @role_required(['ADMIN'])
 def update_user(user_id):
     schema = UpdateUserSchema()
@@ -70,7 +70,7 @@ def update_user(user_id):
     return jsonify({"message": "User updated successfully"}), 200
 
 
-@admin_blueprint.route('/delete-user/<int:user_id>', methods=['DELETE'])
+@user_blueprint.route('/delete-user/<int:user_id>', methods=['DELETE'])
 @role_required(['ADMIN'])
 def delete_user(user_id):
     
@@ -92,7 +92,7 @@ def delete_user(user_id):
     return jsonify({"message": "User and related tasks deleted successfully"}), 200
 
 
-@admin_blueprint.route('/list-user', methods=['GET'])
+@user_blueprint.route('/list-user', methods=['GET'])
 @role_required(['ADMIN'])
 def list_users():
     users = User.query.all()

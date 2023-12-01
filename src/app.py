@@ -5,7 +5,7 @@ from extensions import mail, limiter
 from db import db, db_init
 from common.bcrypt import bcrypt
 from auth.apis import auth_blp
-from admin.apis import admin_blueprint
+from user.apis import user_blueprint
 from task.apis import task_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
@@ -35,7 +35,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 app.register_blueprint(auth_blp, url_prefix="/auth")
 app.register_blueprint(task_blueprint, url_prefix="/user")
-app.register_blueprint(admin_blueprint, url_prefix="/admin")
+app.register_blueprint(user_blueprint, url_prefix="/admin")
 
 # with app.app_context():
 #     db_init()
