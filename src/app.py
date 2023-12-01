@@ -34,7 +34,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,  
     API_URL,
     config={  
-        'app_name': "Twitter-like API"
+        'app_name': "Task Geass API"
     }
 )
 
