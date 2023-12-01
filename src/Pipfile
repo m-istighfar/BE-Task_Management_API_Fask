@@ -16,6 +16,8 @@ flask-swagger-ui = "*"
 flask-cors = "*"
 faker = "*"
 gunicorn = "*"
+flask-mail = "*"
+flask-limiter = "*"
 
 [dev-packages]
 
