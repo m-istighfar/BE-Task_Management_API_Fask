@@ -75,7 +75,7 @@ def verify_email(token):
     return jsonify({"message": "Account verified successfully"}), 200
 
 @auth_blp.route("/login", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("5 per 5 minute")
 def login():
     schema = UserLoginSchema()
     try:
